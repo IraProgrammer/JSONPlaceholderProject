@@ -3,6 +3,7 @@ package com.example.irishka.jsonplaceholderproject;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+//TODO папки именуются также как и переменные, camelCase и с маленькой буквы (не знал куда вставить этот туду)
 public class PostModel {
 
     @SerializedName("id")

@@ -33,13 +33,14 @@ public class MainActivity extends AppCompatActivity implements IView {
         recyclerView.setLayoutManager(linearLayoutManager);
         adapter = new PostsAdapter();
         recyclerView.setAdapter(adapter);
-
         presenter.onDownloadPosts();
     }
 
 
     @Override
     public void showList(List<PostModel> postModelList) {
+        //TODO использую табуляцию для читабельности
+        // или можно просто нажать Ctrl+Alt+L для форматирования
     adapter.setPostList(postModelList);
     }
 
