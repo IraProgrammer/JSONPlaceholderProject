@@ -26,7 +26,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
 
     @Override
     public CommentViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_post, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_comm, parent, false);
         return new CommentViewHolder(v);
     }
 
@@ -45,10 +45,10 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
 
     class CommentViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.tv_title)
+        @BindView(R.id.tv_email)
         TextView title;
 
-        @BindView(R.id.tv_body)
+        @BindView(R.id.tv_comm)
         TextView body;
 
         public CommentViewHolder(View itemView) {
