@@ -1,14 +1,13 @@
-package com.example.irishka.jsonplaceholderproject;
+package com.example.irishka.jsonplaceholderproject.model.modelPost;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-//TODO папки именуются также как и переменные, camelCase и с маленькой буквы (не знал куда вставить этот туду)
 public class PostModel {
 
     @SerializedName("id")
     @Expose
-    private String id;
+    private int id;
 
     @SerializedName("title")
     @Expose
@@ -18,11 +17,11 @@ public class PostModel {
     @Expose
     private String body;
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 

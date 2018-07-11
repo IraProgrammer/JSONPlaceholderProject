@@ -5,14 +5,16 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
-import com.example.irishka.jsonplaceholderproject.Presenter.PostsListPresenter;
+import com.example.irishka.jsonplaceholderproject.model.modelPost.PostModel;
+import com.example.irishka.jsonplaceholderproject.presenter.presenterPost.PostsListPresenter;
+import com.example.irishka.jsonplaceholderproject.view.viewPost.IViewMain;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements IView {
+public class MainActivity extends AppCompatActivity implements IViewMain {
 
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
@@ -31,7 +33,7 @@ public class MainActivity extends AppCompatActivity implements IView {
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
-        adapter = new PostsAdapter();
+        adapter = new PostsAdapter(this);
         recyclerView.setAdapter(adapter);
         presenter.onDownloadPosts();
     }
@@ -39,14 +41,12 @@ public class MainActivity extends AppCompatActivity implements IView {
 
     @Override
     public void showList(List<PostModel> postModelList) {
-        //TODO использую табуляцию для читабельности
-        // или можно просто нажать Ctrl+Alt+L для форматирования
-    adapter.setPostList(postModelList);
+        adapter.setPostList(postModelList);
     }
 
     @Override
     public void onStop() {
-    super.onStop();
+        super.onStop();
         if (presenter != null) {
             presenter.onStop();
         }
