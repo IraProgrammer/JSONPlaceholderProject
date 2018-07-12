@@ -14,6 +14,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+// TODO: MainActivity и PostsAdapter тоже относятся к view постов
+// стоит закинуть в папку, где лежить интрефейс IViewMain
 public class MainActivity extends AppCompatActivity implements IViewMain {
 
     @BindView(R.id.recycler_view)

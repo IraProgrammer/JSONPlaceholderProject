@@ -13,6 +13,9 @@ public class PostsListPresenter {
 
     private IViewMain view;
 
+    // TODO: видимо, при мердже потерялось
+    //TODO лучше сделать lazy
+    // достаточно убрать инициализацию отсюда и перед обращениями к disposable добавить проверку на null
     private Disposable disposable = Disposables.empty();
 
     public PostsListPresenter(IViewMain view) {
@@ -28,6 +31,7 @@ public class PostsListPresenter {
         disposable = apiModel.getTypicodeApi()
                 .getPosts()
                 .observeOn(AndroidSchedulers.mainThread())
+                // TODO: если лямбда в одну строку, то фигурные скобки не нужны
                 .subscribe(list -> {view.showList(list);}, Throwable::printStackTrace);
     }
 

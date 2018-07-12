@@ -35,6 +35,7 @@ public class CommentsActivity extends AppCompatActivity implements IViewComments
 
     private CommentsPresenter presenter;
 
+    // TODO: не нужно создавать ссылку на интент
     Intent intent;
 
     @Override
@@ -58,6 +59,9 @@ public class CommentsActivity extends AppCompatActivity implements IViewComments
     @Override
     public void showComments(List<CommentModel> commentModelList) {
 
+        // TODO: эти данные из интента не нужно доставить, когда придут комменты
+        // а вдруг интернет будет слабый? в таком случае пост не отобразится
+        // так же предлагаю сделать прогресс бар пока грузятся данные
         tvTitle.setText(intent.getStringExtra(TITLE));
         tvBody.setText(intent.getStringExtra(BODY));
 

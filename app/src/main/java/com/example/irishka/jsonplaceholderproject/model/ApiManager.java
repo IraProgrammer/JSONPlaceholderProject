@@ -13,6 +13,8 @@ public class ApiManager{
 
     private static final String BASE_URL = "https://jsonplaceholder.typicode.com";
 
+    // TODO: названия переменных с маленькой буквы и camelCase всегда
+    // только константы капсом с подчеркиваниями (BASE_URL - константа)
     private static ApiManager ApiManager;
 
     private ITypicodeApi typicodeApi;
@@ -21,6 +23,7 @@ public class ApiManager{
         return typicodeApi;
     }
 
+    // TODO: я тут подумал, еще лучше будет решение вынести из конструктора, и вызывать init после создания
     private ApiManager(){
         init();
     }
@@ -29,6 +32,7 @@ public class ApiManager{
 
         if (ApiManager == null) {
             ApiManager = new ApiManager();
+            // TODO: вот так - ApiManager.init()
         }
 
         return ApiManager;

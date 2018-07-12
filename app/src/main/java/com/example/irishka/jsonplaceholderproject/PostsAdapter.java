@@ -28,6 +28,8 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostViewHold
 
     private List<PostModel> postModelList = new ArrayList<>();
 
+    // TODO: не нужно создавать ссылку на View
+    // это View испоьзуется только в методе onCreateViewHolder
     private View v;
 
     private Context context;
@@ -84,7 +86,10 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostViewHold
 
         @Override
         public void onClick(View view) {
-
+            // TODO: контекст можно вытащить из itemView
+            // itemView.getContext()
+            // и не нужно будет передавать контекст в адаптер
+            // еще лучше будет, если клик обрабатывать не здесь, а в активити, а сюда интерфейс-листенер
             Toast.makeText(context, String.valueOf(postModel.getId()), Toast.LENGTH_SHORT).show();
 
             Intent intent = new Intent(context, CommentsActivity.class);
