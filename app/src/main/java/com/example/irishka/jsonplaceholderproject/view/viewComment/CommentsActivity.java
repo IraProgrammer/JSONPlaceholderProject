@@ -62,9 +62,6 @@ public class CommentsActivity extends AppCompatActivity implements IViewComments
 
     @Override
     public void showComments(List<CommentModel> commentModelList) {
-
-        // TODO: прогресс бар
-
         adapter.setPostList(commentModelList);
     }
 
