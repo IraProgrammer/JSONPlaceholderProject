@@ -7,4 +7,8 @@ import java.util.List;
 public interface IViewMain {
 
     void showList(List<PostModel> postModelList);
+
+    void setProgressBarVisible();
+
+    void setProgressBarGone();
 }

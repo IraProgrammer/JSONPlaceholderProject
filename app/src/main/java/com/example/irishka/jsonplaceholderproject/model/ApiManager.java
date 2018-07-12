@@ -9,13 +9,11 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class ApiManager{
+public class ApiManager {
 
     private static final String BASE_URL = "https://jsonplaceholder.typicode.com";
 
-    // TODO: названия переменных с маленькой буквы и camelCase всегда
-    // только константы капсом с подчеркиваниями (BASE_URL - константа)
-    private static ApiManager ApiManager;
+    private static ApiManager apiManager;
 
     private ITypicodeApi typicodeApi;
 
@@ -23,19 +21,17 @@ public class ApiManager{
         return typicodeApi;
     }
 
-    // TODO: я тут подумал, еще лучше будет решение вынести из конструктора, и вызывать init после создания
     private ApiManager(){
-        init();
     }
 
     public static ApiManager getInstance() {
 
-        if (ApiManager == null) {
-            ApiManager = new ApiManager();
-            // TODO: вот так - ApiManager.init()
+        if (apiManager == null) {
+            apiManager = new ApiManager();
+            apiManager.init();
         }
 
-        return ApiManager;
+        return apiManager;
     }
 
     private void init() {

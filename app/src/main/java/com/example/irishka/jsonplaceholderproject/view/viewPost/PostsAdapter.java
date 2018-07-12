@@ -1,14 +1,15 @@
-package com.example.irishka.jsonplaceholderproject;
+package com.example.irishka.jsonplaceholderproject.view.viewPost;
 
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import com.example.irishka.jsonplaceholderproject.R;
 import com.example.irishka.jsonplaceholderproject.model.modelPost.PostModel;
 import com.example.irishka.jsonplaceholderproject.view.viewComment.CommentsActivity;
 
@@ -17,6 +18,8 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
 
 public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostViewHolder> {
 
@@ -28,14 +31,10 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostViewHold
 
     private List<PostModel> postModelList = new ArrayList<>();
 
-    // TODO: не нужно создавать ссылку на View
-    // это View испоьзуется только в методе onCreateViewHolder
-    private View v;
+    private OnItemClickListener onItemClickListener;
 
-    private Context context;
-
-    public PostsAdapter(Context context) {
-        this.context = context;
+    public PostsAdapter(OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
     }
 
     public void setPostList(List<PostModel> postModelList) {
@@ -43,16 +42,19 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostViewHold
         notifyDataSetChanged();
     }
 
+    public interface OnItemClickListener{
+        void onItemClick(PostModel postModel);
+    }
+
     @Override
     public PostViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_post, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_post, parent, false);
         return new PostViewHolder(v);
     }
 
     @Override
     public void onBindViewHolder(PostViewHolder holder, int position) {
         PostModel post = postModelList.get(position);
-
         holder.bind(post);
 
     }
@@ -62,7 +64,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostViewHold
         return postModelList.size();
     }
 
-    class PostViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class PostViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.tv_title)
         TextView title;
@@ -70,33 +72,21 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostViewHold
         @BindView(R.id.tv_body)
         TextView body;
 
-        PostModel postModel;
+        View itemView;
 
         private PostViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
-            itemView.setOnClickListener(this);
+
+            this.itemView = itemView;
+
         }
 
         void bind(PostModel post) {
-            postModel = post;
             title.setText(post.getTitle());
             body.setText(post.getBody());
-        }
 
-        @Override
-        public void onClick(View view) {
-            // TODO: контекст можно вытащить из itemView
-            // itemView.getContext()
-            // и не нужно будет передавать контекст в адаптер
-            // еще лучше будет, если клик обрабатывать не здесь, а в активити, а сюда интерфейс-листенер
-            Toast.makeText(context, String.valueOf(postModel.getId()), Toast.LENGTH_SHORT).show();
-
-            Intent intent = new Intent(context, CommentsActivity.class);
-            intent.putExtra(ID, postModel.getId());
-            intent.putExtra(TITLE, postModel.getTitle());
-            intent.putExtra(BODY, postModel.getBody());
-            context.startActivity(intent);
+            itemView.setOnClickListener(view -> onItemClickListener.onItemClick(post));
         }
     }
 }

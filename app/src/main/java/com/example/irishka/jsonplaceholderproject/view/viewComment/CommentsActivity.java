@@ -5,6 +5,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.irishka.jsonplaceholderproject.R;
@@ -16,9 +18,9 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.example.irishka.jsonplaceholderproject.PostsAdapter.BODY;
-import static com.example.irishka.jsonplaceholderproject.PostsAdapter.ID;
-import static com.example.irishka.jsonplaceholderproject.PostsAdapter.TITLE;
+import static com.example.irishka.jsonplaceholderproject.view.viewPost.PostsAdapter.BODY;
+import static com.example.irishka.jsonplaceholderproject.view.viewPost.PostsAdapter.ID;
+import static com.example.irishka.jsonplaceholderproject.view.viewPost.PostsAdapter.TITLE;
 
 public class CommentsActivity extends AppCompatActivity implements IViewComments {
 
@@ -31,12 +33,12 @@ public class CommentsActivity extends AppCompatActivity implements IViewComments
     @BindView(R.id.comments_recycler_view)
     RecyclerView recyclerView;
 
+    @BindView(R.id.progressBar_comments)
+    ProgressBar progressBar;
+
     private CommentsAdapter adapter;
 
     private CommentsPresenter presenter;
-
-    // TODO: не нужно создавать ссылку на интент
-    Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +46,7 @@ public class CommentsActivity extends AppCompatActivity implements IViewComments
         setContentView(R.layout.activity_comments);
         ButterKnife.bind(this);
 
-        intent = getIntent();
+        Intent intent = getIntent();
 
         presenter = new CommentsPresenter(this);
 
@@ -54,16 +56,14 @@ public class CommentsActivity extends AppCompatActivity implements IViewComments
         recyclerView.setAdapter(adapter);
 
         presenter.onDownloadComments(intent.getIntExtra(ID, 1));
+        tvTitle.setText(intent.getStringExtra(TITLE));
+        tvBody.setText(intent.getStringExtra(BODY));
     }
 
     @Override
     public void showComments(List<CommentModel> commentModelList) {
 
-        // TODO: эти данные из интента не нужно доставить, когда придут комменты
-        // а вдруг интернет будет слабый? в таком случае пост не отобразится
-        // так же предлагаю сделать прогресс бар пока грузятся данные
-        tvTitle.setText(intent.getStringExtra(TITLE));
-        tvBody.setText(intent.getStringExtra(BODY));
+        // TODO: прогресс бар
 
         adapter.setPostList(commentModelList);
     }
@@ -74,5 +74,15 @@ public class CommentsActivity extends AppCompatActivity implements IViewComments
         if (presenter != null) {
             presenter.onStop();
         }
+    }
+
+    @Override
+    public void setProgressBarVisible(){
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void setProgressBarGone(){
+        progressBar.setVisibility(View.GONE);
     }
 }

@@ -1,25 +1,34 @@
-package com.example.irishka.jsonplaceholderproject;
+package com.example.irishka.jsonplaceholderproject.view.viewPost;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.ProgressBar;
 
+import com.example.irishka.jsonplaceholderproject.R;
 import com.example.irishka.jsonplaceholderproject.model.modelPost.PostModel;
 import com.example.irishka.jsonplaceholderproject.presenter.presenterPost.PostsListPresenter;
-import com.example.irishka.jsonplaceholderproject.view.viewPost.IViewMain;
+import com.example.irishka.jsonplaceholderproject.view.viewComment.CommentsActivity;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-// TODO: MainActivity и PostsAdapter тоже относятся к view постов
-// стоит закинуть в папку, где лежить интрефейс IViewMain
-public class MainActivity extends AppCompatActivity implements IViewMain {
+import static com.example.irishka.jsonplaceholderproject.view.viewPost.PostsAdapter.BODY;
+import static com.example.irishka.jsonplaceholderproject.view.viewPost.PostsAdapter.ID;
+import static com.example.irishka.jsonplaceholderproject.view.viewPost.PostsAdapter.TITLE;
+
+public class PostsActivity extends AppCompatActivity implements IViewMain, PostsAdapter.OnItemClickListener {
 
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
+
+    @BindView(R.id.progressBar_posts)
+    ProgressBar progressBar;
 
     private PostsAdapter adapter;
 
@@ -52,5 +61,24 @@ public class MainActivity extends AppCompatActivity implements IViewMain {
         if (presenter != null) {
             presenter.onStop();
         }
+    }
+
+    @Override
+    public void setProgressBarVisible(){
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void setProgressBarGone(){
+        progressBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onItemClick(PostModel postModel) {
+        Intent intent = new Intent(PostsActivity.this, CommentsActivity.class);
+        intent.putExtra(ID, postModel.getId());
+        intent.putExtra(TITLE, postModel.getTitle());
+        intent.putExtra(BODY, postModel.getBody());
+        startActivity(intent);
     }
 }

@@ -13,32 +13,29 @@ public class CommentsPresenter {
 
     private IViewComments view;
 
-    // TODO: видимо, при мердже потерялось
-    //TODO лучше сделать lazy
-    // достаточно убрать инициализацию отсюда и перед обращениями к disposable добавить проверку на null
-    private Disposable disposable = Disposables.empty();
-
+    private Disposable disposable;
 
     public CommentsPresenter(IViewComments view) {
         this.view = view;
     }
 
-    // TODO: в плане нейминга скорее не number, а postId
-    public void onDownloadComments(int number) {
+    public void onDownloadComments(int postId) {
 
-        if (!disposable.isDisposed()) {
+        if (disposable != null && !disposable.isDisposed()) {
             disposable.dispose();
         }
 
         disposable = apiModel.getTypicodeApi()
-                .getCommentsPath(number)
+                .getCommentsPath(postId)
                 .observeOn(AndroidSchedulers.mainThread())
-                // TODO: если лямбда в одну строку, то фигурные скобки не нужны
-                .subscribe(list -> {view.showComments(list);}, Throwable::printStackTrace);
+                .doOnSubscribe(list -> view.setProgressBarVisible())
+                .doOnSuccess(list -> view.setProgressBarGone())
+                .doOnError(list -> view.setProgressBarGone())
+                .subscribe(list -> view.showComments(list), Throwable::printStackTrace);
     }
 
     public void onStop() {
-        if (!disposable.isDisposed()) {
+        if (disposable != null && !disposable.isDisposed()) {
             disposable.dispose();
         }
     }

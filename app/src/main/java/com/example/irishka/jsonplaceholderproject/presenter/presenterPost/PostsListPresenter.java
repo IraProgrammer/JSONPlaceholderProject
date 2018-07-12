@@ -1,7 +1,7 @@
 package com.example.irishka.jsonplaceholderproject.presenter.presenterPost;
 
-import com.example.irishka.jsonplaceholderproject.view.viewPost.IViewMain;
 import com.example.irishka.jsonplaceholderproject.model.ApiManager;
+import com.example.irishka.jsonplaceholderproject.view.viewPost.IViewMain;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -13,10 +13,7 @@ public class PostsListPresenter {
 
     private IViewMain view;
 
-    // TODO: видимо, при мердже потерялось
-    //TODO лучше сделать lazy
-    // достаточно убрать инициализацию отсюда и перед обращениями к disposable добавить проверку на null
-    private Disposable disposable = Disposables.empty();
+    private Disposable disposable;
 
     public PostsListPresenter(IViewMain view) {
         this.view = view;
@@ -24,19 +21,21 @@ public class PostsListPresenter {
 
     public void onDownloadPosts() {
 
-        if (!disposable.isDisposed()) {
+        if (disposable != null && !disposable.isDisposed()) {
             disposable.dispose();
         }
 
         disposable = apiModel.getTypicodeApi()
                 .getPosts()
                 .observeOn(AndroidSchedulers.mainThread())
-                // TODO: если лямбда в одну строку, то фигурные скобки не нужны
-                .subscribe(list -> {view.showList(list);}, Throwable::printStackTrace);
+                .doOnSubscribe(list -> view.setProgressBarVisible())
+                .doOnSuccess(list -> view.setProgressBarGone())
+                .doOnError(list -> view.setProgressBarGone())
+                .subscribe(list -> view.showList(list), Throwable::printStackTrace);
     }
 
     public void onStop() {
-        if (!disposable.isDisposed()) {
+        if (disposable != null && !disposable.isDisposed()) {
             disposable.dispose();
         }
     }
