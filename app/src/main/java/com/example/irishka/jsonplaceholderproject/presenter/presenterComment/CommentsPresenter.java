@@ -1,5 +1,8 @@
 package com.example.irishka.jsonplaceholderproject.presenter.presenterComment;
 
+import com.arellomobile.mvp.InjectViewState;
+import com.arellomobile.mvp.MvpPresenter;
+import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.example.irishka.jsonplaceholderproject.database.CommentDao;
 import com.example.irishka.jsonplaceholderproject.model.ApiManager;
 import com.example.irishka.jsonplaceholderproject.model.AppDatabaseManager;
@@ -16,19 +19,27 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.disposables.Disposables;
 import io.reactivex.schedulers.Schedulers;
 
-public class CommentsPresenter {
+@InjectViewState
+public class CommentsPresenter extends MvpPresenter<IViewComments>{
 
     private ApiManager apiModel = ApiManager.getInstance();
 
     private AppDatabaseManager databaseManager;
 
-    private IViewComments view;
-
     private Disposable disposable;
 
-    public CommentsPresenter(IViewComments view) {
-        this.view = view;
+    private int postId;
+
+    public CommentsPresenter(int postId) {
+        this.postId = postId;
         databaseManager = AppDatabaseManager.getInstance();
+    }
+
+    @Override
+    protected void onFirstViewAttach() {
+        super.onFirstViewAttach();
+        getViewState().showPost();
+        onDownloadComments(postId);
     }
 
     private void onSaveComments(List<CommentModel> comments) {
@@ -45,7 +56,7 @@ public class CommentsPresenter {
                 .subscribeOn(Schedulers.io());
     }
 
-    public void onDownloadComments(int postId) {
+    private void onDownloadComments(int postId) {
 
         if (disposable != null && !disposable.isDisposed()) {
             disposable.dispose();
@@ -54,10 +65,10 @@ public class CommentsPresenter {
         disposable = getCommentsFromInternet(postId)
                 .onErrorResumeNext(getCommentsFromDatabase(postId))
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(list -> view.showProgress())
-                .doOnSuccess(list -> view.hideProgress())
-                .doOnError(list -> view.hideProgress())
-                .subscribe(list -> view.showComments(list), Throwable::printStackTrace);
+                .doOnSubscribe(list -> getViewState().showProgress())
+                .doOnSuccess(list -> getViewState().hideProgress())
+                .doOnError(list -> getViewState().hideProgress())
+                .subscribe(list -> getViewState().showComments(list), Throwable::printStackTrace);
     }
 
     public void onStop() {

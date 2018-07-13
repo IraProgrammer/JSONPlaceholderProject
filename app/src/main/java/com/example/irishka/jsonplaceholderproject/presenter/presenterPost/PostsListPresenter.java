@@ -1,9 +1,12 @@
 package com.example.irishka.jsonplaceholderproject.presenter.presenterPost;
 
+import com.arellomobile.mvp.InjectViewState;
+import com.arellomobile.mvp.MvpPresenter;
 import com.example.irishka.jsonplaceholderproject.model.ApiManager;
 import com.example.irishka.jsonplaceholderproject.model.AppDatabaseManager;
 import com.example.irishka.jsonplaceholderproject.model.modelPost.PostModel;
 import com.example.irishka.jsonplaceholderproject.view.viewPost.IViewMain;
+import com.example.irishka.jsonplaceholderproject.view.viewPost.PostsActivity;
 
 import java.util.List;
 
@@ -13,20 +16,24 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
-public class PostsListPresenter {
+@InjectViewState
+public class PostsListPresenter extends MvpPresenter<IViewMain>{
 
     private ApiManager apiModel = ApiManager.getInstance();
 
     private AppDatabaseManager databaseManager;
 
-    private IViewMain view;
-
     private Disposable disposable;
 
-    public PostsListPresenter(IViewMain view) {
-        this.view = view;
-        view.initDatabase();
+    public PostsListPresenter() {
         databaseManager = AppDatabaseManager.getInstance();
+    }
+
+    @Override
+    protected void onFirstViewAttach() {
+        super.onFirstViewAttach();
+        getViewState().initDatabase();
+        onDownloadPosts();
     }
 
     private void onSavePosts(List<PostModel> posts) {
@@ -43,7 +50,7 @@ public class PostsListPresenter {
                 .subscribeOn(Schedulers.io());
     }
 
-    public void onDownloadPosts() {
+    private void onDownloadPosts() {
 
         if (disposable != null && !disposable.isDisposed()) {
             disposable.dispose();
@@ -52,10 +59,10 @@ public class PostsListPresenter {
         disposable = getPostsFromInternet()
                 .onErrorResumeNext(getPostsFromDatabase())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(list -> view.showProgress())
-                .doOnSuccess(list -> view.hideProgress())
-                .doOnError(list -> view.hideProgress())
-                .subscribe(list -> view.showList(list), Throwable::printStackTrace);
+                .doOnSubscribe(list -> getViewState().showProgress())
+                .doOnSuccess(list -> getViewState().hideProgress())
+                .doOnError(list -> getViewState().hideProgress())
+                .subscribe(list -> getViewState().showList(list), Throwable::printStackTrace);
     }
 
     public void onStop() {

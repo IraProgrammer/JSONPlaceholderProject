@@ -49,8 +49,9 @@ dependencies {
     // optional - RxJava support for Room
     implementation 'android.arch.persistence.room:rxjava2:1.1.1'
 
-  //  implementation 'com.arello-mobile:moxy:1.5.3'
-  //  implementation 'com.arello-mobile:moxy-android:1.5.3'
-  //  compileOnly 'com.arello-mobile:moxy-compiler:1.5.3'
+    implementation 'com.arello-mobile:moxy:1.5.3'
+    implementation 'com.arello-mobile:moxy-android:1.5.3'
+    implementation 'com.arello-mobile:moxy-app-compat:1.5.3'
+    annotationProcessor 'com.arello-mobile:moxy-compiler:1.5.3'
 
 }

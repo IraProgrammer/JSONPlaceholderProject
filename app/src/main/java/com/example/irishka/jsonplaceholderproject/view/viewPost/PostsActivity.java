@@ -9,6 +9,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import com.arellomobile.mvp.MvpAppCompatActivity;
+import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.arellomobile.mvp.viewstate.strategy.OneExecutionStateStrategy;
+import com.arellomobile.mvp.viewstate.strategy.SingleStateStrategy;
+import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
 import com.example.irishka.jsonplaceholderproject.R;
 import com.example.irishka.jsonplaceholderproject.model.AppDatabaseManager;
 import com.example.irishka.jsonplaceholderproject.model.modelPost.PostModel;
@@ -24,7 +29,7 @@ import static com.example.irishka.jsonplaceholderproject.view.viewPost.PostsAdap
 import static com.example.irishka.jsonplaceholderproject.view.viewPost.PostsAdapter.ID;
 import static com.example.irishka.jsonplaceholderproject.view.viewPost.PostsAdapter.TITLE;
 
-public class PostsActivity extends AppCompatActivity implements IViewMain, PostsAdapter.OnItemClickListener {
+public class PostsActivity extends MvpAppCompatActivity implements IViewMain, PostsAdapter.OnItemClickListener {
 
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
@@ -34,7 +39,8 @@ public class PostsActivity extends AppCompatActivity implements IViewMain, Posts
 
     private PostsAdapter adapter;
 
-    private PostsListPresenter presenter;
+    @InjectPresenter
+    PostsListPresenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,14 +48,10 @@ public class PostsActivity extends AppCompatActivity implements IViewMain, Posts
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        presenter = new PostsListPresenter(this);
-
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
         adapter = new PostsAdapter(this);
         recyclerView.setAdapter(adapter);
-        presenter.onDownloadPosts();
-
 
     }
 
@@ -76,6 +78,7 @@ public class PostsActivity extends AppCompatActivity implements IViewMain, Posts
     public void hideProgress(){
         progressBar.setVisibility(View.GONE);
     }
+
 
     @Override
     public void initDatabase() {
