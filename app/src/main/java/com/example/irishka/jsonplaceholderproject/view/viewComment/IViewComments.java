@@ -8,8 +8,8 @@ public interface IViewComments {
 
     void showComments(List<CommentModel> commentModelList);
 
-    void setProgressBarVisible();
+    void showProgress();
 
-    void setProgressBarGone();
+    void hideProgress();
 
 }

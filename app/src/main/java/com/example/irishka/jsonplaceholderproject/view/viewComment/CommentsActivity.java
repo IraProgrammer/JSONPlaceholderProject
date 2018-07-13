@@ -74,12 +74,12 @@ public class CommentsActivity extends AppCompatActivity implements IViewComments
     }
 
     @Override
-    public void setProgressBarVisible(){
+    public void showProgress(){
         progressBar.setVisibility(View.VISIBLE);
     }
 
     @Override
-    public void setProgressBarGone(){
+    public void hideProgress(){
         progressBar.setVisibility(View.GONE);
     }
 }

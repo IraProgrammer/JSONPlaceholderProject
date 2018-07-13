@@ -1,5 +1,6 @@
 package com.example.irishka.jsonplaceholderproject.view.viewPost;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import com.example.irishka.jsonplaceholderproject.R;
+import com.example.irishka.jsonplaceholderproject.model.AppDatabaseManager;
 import com.example.irishka.jsonplaceholderproject.model.modelPost.PostModel;
 import com.example.irishka.jsonplaceholderproject.presenter.presenterPost.PostsListPresenter;
 import com.example.irishka.jsonplaceholderproject.view.viewComment.CommentsActivity;
@@ -47,6 +49,8 @@ public class PostsActivity extends AppCompatActivity implements IViewMain, Posts
         adapter = new PostsAdapter(this);
         recyclerView.setAdapter(adapter);
         presenter.onDownloadPosts();
+
+
     }
 
 
@@ -64,13 +68,18 @@ public class PostsActivity extends AppCompatActivity implements IViewMain, Posts
     }
 
     @Override
-    public void setProgressBarVisible(){
+    public void showProgress(){
         progressBar.setVisibility(View.VISIBLE);
     }
 
     @Override
-    public void setProgressBarGone(){
+    public void hideProgress(){
         progressBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void initDatabase() {
+         AppDatabaseManager.getInstance().init(this);
     }
 
     @Override
